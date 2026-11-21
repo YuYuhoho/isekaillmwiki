@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>為什麼大家都在「轉生到異世界」？｜日本動漫 40 年演進圖鑑</title>
+  <style>
+    :root {
+      --bg-outer: #07090F;
+      --bg-slide: #0D111C;
+      --surface: #151B2B;
+      --surface-soft: rgba(21, 27, 43, 0.72);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --text-primary: #F8FAFC;
+      --text-body: #CBD5E1;
+      --text-muted: #94A3B8;
+      --cyan: #38BDF8;
+      --crimson: #F43F5E;
+      --amber: #F59E0B;
+      --font-sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", "Segoe UI", system-ui, -apple-system, sans-serif;
+      --font-mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg-outer);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+    }
+
+    /* Stage wrapper */
+    #viewport {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(56, 189, 248, 0.08), transparent 45%),
+        radial-gradient(circle at 82% 85%, rgba(244, 63, 94, 0.07), transparent 45%),
+        var(--bg-outer);
+    }
+
+    #deck-stage {
+      position: relative;
+      width: 1280px;
+      height: 720px;
+      transform-origin: center center;
+      background: var(--bg-slide);
+      border: 1px solid var(--border-strong);
+      border-radius: 14px;
+      box-shadow: 0 32px 96px rgba(0, 0, 0, 0.78), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+      overflow: hidden;
+    }
+
+    /* Slides */
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 54px 68px 64px;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: opacity 0.36s ease, transform 0.36s ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    /* Ambient film grain & cinema glow */
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(640px 320px at 85% 12%, rgba(56, 189, 248, 0.09), transparent 70%),
+        radial-gradient(520px 280px at 12% 92%, rgba(245, 158, 11, 0.06), transparent 70%);
+    }
+
+    .slide > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Typography */
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 14px;
+    }
+
+    .kicker.amber { color: var(--amber); }
+    .kicker.crimson { color: var(--crimson); }
+
+    .kicker .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    h1 {
+      font-size: 52px;
+      line-height: 1.18;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    h2 {
+      font-size: 36px;
+      line-height: 1.24;
+      font-weight: 800;
+      letter-spacing: -0.015em;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 20px;
+      line-height: 1.55;
+      color: var(--text-body);
+      font-weight: 400;
+    }
+
+    .lead {
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 26px;
+    }
+
+    .accent-cyan { color: var(--cyan); }
+    .accent-amber { color: var(--amber); }
+    .accent-crimson { color: var(--crimson); }
+
+    /* Layout helpers */
+    .split-2 {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 36px;
+      align-items: center;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .split-balanced {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      flex: 1;
+      align-items: stretch;
+      min-height: 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card.highlight-cyan {
+      border-color: rgba(56, 189, 248, 0.35);
+      box-shadow: 0 0 32px rgba(56, 189, 248, 0.08);
+    }
+
+    .card.highlight-amber {
+      border-color: rgba(245, 158, 11, 0.4);
+      box-shadow: 0 0 32px rgba(245, 158, 11, 0.09);
+    }
+
+    .card.highlight-crimson {
+      border-color: rgba(244, 63, 94, 0.38);
+      box-shadow: 0 0 32px rgba(244, 63, 94, 0.08);
+    }
+
+    .card-title {
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .card-body {
+      font-size: 16px;
+      line-height: 1.62;
+      color: var(--text-body);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: var(--text-body);
+    }
+
+    .pill.cyan { background: rgba(56, 189, 248, 0.14); border-color: rgba(56, 189, 248, 0.32); color: #7DD3FC; }
+    .pill.amber { background: rgba(245, 158, 11, 0.14); border-color: rgba(245, 158, 11, 0.35); color: #FCD34D; }
+    .pill.crimson { background: rgba(244, 63, 94, 0.14); border-color: rgba(244, 63, 94, 0.35); color: #FDA4AF; }
+
+    .stat-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 22px;
+    }
+
+    .stat-num {
+      font-family: var(--font-mono);
+      font-size: 40px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--text-muted);
+    }
+
+    .quote-banner {
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.14), rgba(21, 27, 43, 0.6));
+      border-left: 4px solid var(--amber);
+      border-radius: 10px;
+      padding: 16px 22px;
+      font-size: 18px;
+      line-height: 1.55;
+      color: var(--text-primary);
+    }
+
+    .svg-frame {
+      background: rgba(11, 15, 25, 0.82);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .svg-frame svg {
+      width: 100%;
+      height: 100%;
+      max-height: 100%;
+      display: block;
+    }
+
+    /* Slide footer & controls */
+    #hud {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 46px;
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(180deg, transparent, rgba(7, 9, 15, 0.88));
+      z-index: 20;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .hud-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .hud-brand {
+      font-family: var(--font-mono);
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .hud-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hud-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: var(--text-body);
+      border-radius: 8px;
+      padding: 5px 11px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    .hud-btn:hover {
+      background: rgba(56, 189, 248, 0.16);
+      border-color: rgba(56, 189, 248, 0.45);
+      color: var(--text-primary);
+    }
+
+    .hud-btn.active-toggle {
+      background: rgba(245, 158, 11, 0.18);
+      border-color: rgba(245, 158, 11, 0.55);
+      color: #FCD34D;
+    }
+
+    #progress-track {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.08);
+      z-index: 25;
+      cursor: pointer;
+    }
+
+    #progress-bar {
+      height: 100%;
+      width: 10%;
+      background: linear-gradient(90deg, var(--cyan), var(--amber));
+      transition: width 0.3s ease;
+    }
+
+    /* Speaker Notes Drawer */
+    #notes-drawer {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%) translateY(120%);
+      width: min(920px, calc(100vw - 32px));
+      max-height: 34vh;
+      overflow-y: auto;
+      background: rgba(13, 17, 28, 0.96);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      border-radius: 14px;
+      padding: 18px 24px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85);
+      z-index: 60;
+      transition: transform 0.28s ease;
+      user-select: text;
+    }
+
+    #notes-drawer.open {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .notes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      color: var(--amber);
+    }
+
+    #notes-content {
+      font-size: 15px;
+      line-height: 1.72;
+      color: var(--text-body);
+    }
+
+    /* Grid Overview Modal */
+    #grid-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 9, 15, 0.92);
+      backdrop-filter: blur(8px);
+      z-index: 80;
+      display: none;
+      flex-direction: column;
+      padding: 36px 48px;
+      overflow-y: auto;
+    }
+
+    #grid-modal.open {
+      display: flex;
+    }
+
+    .grid-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .grid-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .grid-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: transform 0.16s ease, border-color 0.16s ease;
+    }
+
+    .grid-item:hover {
+      transform: translateY(-2px);
+      border-color: var(--cyan);
+    }
+
+    .grid-item.current {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.45);
+    }
+
+    .grid-num {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--cyan);
+      margin-bottom: 6px;
+    }
+
+    .grid-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+
+    .grid-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+  </style>
+</head>
+<body>
+  <div id="viewport">
+    <main id="deck-stage" aria-live="polite">
+
+      <!-- ==================== SLIDE 1: TITLE ==================== -->
+      <section class="slide active" data-title="為什麼大家都在「轉生到異世界」？" data-sub="從《神隱少女》到《無職轉生》，40 年日本動漫風格演進"
+        data-notes="【開場口播】大家好！今天想用 10 分鐘，帶大家看一個就算你不常看動漫，滑 Netflix、YouTube 或書店暢銷榜也一定看過的現象——為什麼現在動漫書名動不動就叫『關於我轉生到異世界…』？今天全程不爆雷、不用難懂的宅圈黑話，我們會從大家熟悉的《神隱少女》一路聊到近年代表作《無職轉生》，看看這 40 年來背後藏著什麼有趣的時代心理。">
+        <div class="split-2">
+          <div style="display:flex; flex-direction:column; gap:18px;">
+            <div class="kicker amber"><span class="dot"></span>ANIME CULTURE GUIDE · 給普羅大眾的動漫演進圖鑑</div>
+            <h1>為什麼大家都在<br /><span class="accent-cyan">「轉生到異世界」</span>？</h1>
+            <p class="subtitle">
+              從《神隱少女》到《無職轉生》，<br />
+              用 10 分鐘看懂日本動漫 40 年的風格演進與時代心理
+            </p>
+            <div class="tag-row" style="margin-top:14px;">
+              <span class="pill cyan">零門檻・無劇透</span>
+              <span class="pill amber">主軸案例：《無職轉生》</span>
+              <span class="pill">按 S 開啟講者備忘錄</span>
+            </div>
+          </div>
+          <div class="svg-frame" style="background:transparent; border:none;">
+            <svg viewBox="0 0 480 480" role="img" aria-label="次元傳送門劇院視覺">
+              <defs>
+                <radialGradient id="portalGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.45" />
+                  <stop offset="48%" stop-color="#F59E0B" stop-opacity="0.16" />
+                  <stop offset="100%" stop-color="#0D111C" stop-opacity="0" />
+                </radialGradient>
+                <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#38BDF8" />
+                  <stop offset="55%" stop-color="#F59E0B" />
+                  <stop offset="100%" stop-color="#F43F5E" />
+                </linearGradient>
+              </defs>
+              <circle cx="240" cy="240" r="220" fill="url(#portalGlow)" />
+              <circle cx="240" cy="240" r="185" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-dasharray="6 8" />
+              <circle cx="240" cy="240" r="150" fill="none" stroke="url(#ringGrad)" stroke-width="3" opacity="0.9" />
+              <circle cx="240" cy="240" r="112" fill="#0D111C" stroke="rgba(56,189,248,0.45)" stroke-width="1.5" />
+              <!-- Left side: Everyday city silhouette -->
+              <g opacity="0.85">
+                <rect x="148" y="218" width="22" height="58" rx="2" fill="#1E293B" stroke="#38BDF8" stroke-width="1" />
+                <rect x="176" y="198" width="28" height="78" rx="2" fill="#1E293B" stroke="#38BDF8" stroke-width="1" />
+                <rect x="182" y="210" width="5" height="6" fill="#38BDF8" />
+                <rect x="193" y="210" width="5" height="6" fill="#38BDF8" />
+                <rect x="182" y="224" width="5" height="6" fill="#38BDF8" />
+                <rect x="193" y="238" width="5" height="6" fill="#38BDF8" />
+              </g>
+              <!-- Center divider / portal slit -->
+              <line x1="240" y1="145" x2="240" y2="335" stroke="#F8FAFC" stroke-width="2" stroke-dasharray="4 4" opacity="0.6" />
+              <!-- Right side: Fantasy castle & stars -->
+              <g opacity="0.95">
+                <path d="M266 276 L266 226 L278 206 L290 226 L290 276 Z" fill="#1E293B" stroke="#F59E0B" stroke-width="1.2" />
+                <path d="M292 276 L292 214 L308 186 L324 214 L324 276 Z" fill="#1E293B" stroke="#F59E0B" stroke-width="1.4" />
+                <circle cx="308" cy="176" r="4" fill="#F59E0B" />
+                <circle cx="272" cy="184" r="2.5" fill="#F43F5E" />
+                <circle cx="332" cy="204" r="2" fill="#38BDF8" />
+              </g>
+              <!-- Labels -->
+              <text x="176" y="308" text-anchor="middle" fill="#94A3B8" font-size="13" font-family="Noto Sans TC, sans-serif">現實日常</text>
+              <text x="302" y="308" text-anchor="middle" fill="#FCD34D" font-size="13" font-family="Noto Sans TC, sans-serif">奇幻異界</text>
+              <!-- Orbit markers -->
+              <circle cx="390" cy="240" r="6" fill="#F59E0B" />
+              <circle cx="90" cy="240" r="6" fill="#38BDF8" />
+              <text x="240" y="425" text-anchor="middle" fill="#94A3B8" font-size="12" font-family="JetBrains Mono, monospace" letter-spacing="2">1983 ──────── 2025+</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 2: HOOK & 2025 DATA ==================== -->
+      <section class="slide" data-title="為何十部動漫總有一兩部叫「異世界」？" data-sub="2025 產業量化數據：從小眾題材到席捲全球"
+        data-notes="【口播重點】你可能會以為這只是社群演算法的錯覺，但根據動漫權威媒體 Anime News Network 在 2025 年初公布的產業數據：2024 年日本推出的電視新番裡，異世界足足佔了 15%（單年 34 部）。更驚人的是，動漫史上超過一半的異世界作品，都是在 2020 年之後才誕生的！連最權威的《牛津英語詞典》都在 2024 年正式收錄了 isekai 這個日文外來語。">
+        <div class="kicker"><span class="dot"></span>01 · THE HOOK · 為什麼到處都是它？</div>
+        <h2>滑串流時，為何十部動漫總有一兩部叫<span class="accent-cyan">「異世界」</span>？</h2>
+        <p class="lead">這不是你的錯覺——它已從奇幻小眾，變成全球動漫產業最穩定的流量基本盤。</p>
+
+        <div class="split-2" style="gap:30px;">
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div class="stat-box" style="border-left:4px solid var(--cyan);">
+              <div class="stat-num accent-cyan">15%</div>
+              <div class="stat-label">2024 年日本全新電視動畫中，每 7 部就有 1 部是異世界（單年高達 34 部）。</div>
+            </div>
+            <div class="stat-box" style="border-left:4px solid var(--amber);">
+              <div class="stat-num accent-amber">&gt; 50%</div>
+              <div class="stat-label">動漫史上超過半數的異世界動畫，都是在 2020 年之後才誕生的（近五年產量暴增 143%）。</div>
+            </div>
+            <div class="stat-box" style="border-left:4px solid var(--crimson);">
+              <div class="stat-num accent-crimson">2024 OED</div>
+              <div class="stat-label">《牛津英語詞典》正式收錄 <code style="font-family:var(--font-mono); color:#FDA4AF;">isekai</code>，成為繼 kawaii、mecha 後的全球文化詞彙。</div>
+            </div>
+          </div>
+
+          <div class="svg-frame">
+            <svg viewBox="0 0 500 380" role="img" aria-label="異世界新番佔比與成長趨勢圖">
+              <!-- Top Donut: 15% Share -->
+              <g transform="translate(130, 118)">
+                <circle r="70" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="18" />
+                <circle r="70" fill="none" stroke="#38BDF8" stroke-width="18" stroke-dasharray="66 374" stroke-dashoffset="110" stroke-linecap="round" />
+                <text y="6" text-anchor="middle" fill="#F8FAFC" font-size="28" font-weight="800" font-family="JetBrains Mono, monospace">15%</text>
+                <text y="28" text-anchor="middle" fill="#94A3B8" font-size="12">2024 新番佔比</text>
+              </g>
+              <!-- Right Mini Stat: 40%+ Dubs -->
+              <g transform="translate(260, 56)">
+                <rect width="215" height="122" rx="12" fill="#151B2B" stroke="rgba(245,158,11,0.35)" />
+                <text x="18" y="34" fill="#F59E0B" font-size="12" font-family="JetBrains Mono, monospace">STREAMING PRIORITY</text>
+                <text x="18" y="74" fill="#F8FAFC" font-size="34" font-weight="800" font-family="JetBrains Mono, monospace">40%+</text>
+                <text x="18" y="100" fill="#CBD5E1" font-size="13">歐美龍頭 Crunchyroll 季度配音</text>
+                <text x="18" y="116" fill="#94A3B8" font-size="12">優先投資在異世界題材</text>
+              </g>
+              <!-- Bottom Growth Curve -->
+              <g transform="translate(36, 224)">
+                <text x="0" y="0" fill="#CBD5E1" font-size="13" font-weight="700">異世界動畫年產量爆發曲線（示意）</text>
+                <line x1="0" y1="115" x2="430" y2="115" stroke="rgba(255,255,255,0.16)" stroke-width="1.2" />
+                <path d="M 10 108 L 110 105 L 210 96 L 285 74 L 355 34 L 420 22" fill="none" stroke="#38BDF8" stroke-width="3.5" stroke-linecap="round" />
+                <path d="M 10 108 L 110 105 L 210 96 L 285 74 L 355 34 L 420 22 L 420 115 L 10 115 Z" fill="#38BDF8" opacity="0.12" />
+                <!-- Key nodes -->
+                <circle cx="285" cy="74" r="5" fill="#F59E0B" />
+                <text x="285" y="60" text-anchor="middle" fill="#FCD34D" font-size="11">2019 首破 10 部</text>
+                <circle cx="420" cy="22" r="6" fill="#F43F5E" />
+                <text x="392" y="14" text-anchor="middle" fill="#FDA4AF" font-size="11" font-weight="700">2024: 34 部</text>
+                <!-- Axis labels -->
+                <text x="10" y="134" fill="#94A3B8" font-size="11" font-family="JetBrains Mono, monospace">1990s</text>
+                <text x="110" y="134" fill="#94A3B8" font-size="11" font-family="JetBrains Mono, monospace">2000s</text>
+                <text x="210" y="134" fill="#94A3B8" font-size="11" font-family="JetBrains Mono, monospace">2016</text>
+                <text x="285" y="134" fill="#94A3B8" font-size="11" font-family="JetBrains Mono, monospace">2019</text>
+                <text x="405" y="134" fill="#94A3B8" font-size="11" font-family="JetBrains Mono, monospace">2024</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 3: CORE DEFINITION ==================== -->
+      <section class="slide" data-title="一句話看懂 40 年大轉向：從「想回家」到「重活一次」" data-sub="《神隱少女》vs.《無職轉生》的心理分水嶺"
+        data-notes="【口播重點】其實『異世界』的概念一點都不新，你小時候一定看過《愛麗絲夢遊仙境》或宮崎駿的《神隱少女》。但如果你把《神隱少女》跟近代代表作《無職轉生》擺在一起，會發現一個超大的轉折：以前的千尋誤闖神靈世界，滿腦子都是『救回爸媽、趕快回家』；但現在的異世界主角往往在現實過得太累、太挫折，乾脆選擇留在新世界重活一次。這就是過去 40 年最大的時代轉向。">
+        <div class="kicker amber"><span class="dot"></span>02 · CORE CONCEPT · 一句話秒懂異世界</div>
+        <h2>從「想辦法回家」到「乾脆留在那裡重活」</h2>
+        <p class="lead">異世界（Isekai）就是主角離開日常，進入規則完全不同的世界——但主角的心態徹底變了。</p>
+
+        <div class="split-balanced" style="margin-bottom:20px;">
+          <div class="card highlight-cyan">
+            <div class="kicker" style="margin-bottom:2px;">1980s – 2000s 經典派</div>
+            <div class="card-title">迷路了，我要找到回家的路</div>
+            <p class="card-body">代表：《神隱少女》、《愛麗絲夢遊仙境》、《犬夜叉》<br />現實世界仍有羈絆，異世界是一場考驗與成長旅程，終點通常是<strong>平安歸返</strong>。</p>
+            <div class="svg-frame" style="height:150px; margin-top:auto;">
+              <svg viewBox="0 0 420 120" role="img" aria-label="經典異世界返鄉弧線">
+                <circle cx="58" cy="76" r="24" fill="#151B2B" stroke="#38BDF8" stroke-width="2" />
+                <text x="58" y="81" text-anchor="middle" fill="#F8FAFC" font-size="13">日常</text>
+                <circle cx="362" cy="76" r="24" fill="#151B2B" stroke="#94A3B8" stroke-width="2" stroke-dasharray="4 3" />
+                <text x="362" y="81" text-anchor="middle" fill="#CBD5E1" font-size="13">異界</text>
+                <path d="M 86 64 Q 210 6 334 64" fill="none" stroke="#38BDF8" stroke-width="2.5" />
+                <polygon points="336,64 325,56 327,68" fill="#38BDF8" />
+                <path d="M 334 88 Q 210 126 86 88" fill="none" stroke="#7DD3FC" stroke-width="2.5" stroke-dasharray="6 4" />
+                <polygon points="84,88 95,84 93,96" fill="#7DD3FC" />
+                <text x="210" y="28" text-anchor="middle" fill="#38BDF8" font-size="12">意外誤闖 / 召喚冒險</text>
+                <text x="210" y="114" text-anchor="middle" fill="#94A3B8" font-size="12">成長後回到原本的家</text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="card highlight-amber">
+            <div class="kicker amber" style="margin-bottom:2px;">2010s – 2020s 當代主流</div>
+            <div class="card-title">現實太窒息，不如換張地圖重開機</div>
+            <p class="card-body">代表：<strong>《無職轉生》</strong>、《轉生史萊姆》<br />原世界充滿壓抑或遺憾，主角切斷舊身分，把異世界當成<strong>全新人生的起點</strong>。</p>
+            <div class="svg-frame" style="height:150px; margin-top:auto;">
+              <svg viewBox="0 0 420 120" role="img" aria-label="現代異世界單程重啟路線">
+                <circle cx="58" cy="64" r="24" fill="#151B2B" stroke="#64748B" stroke-width="2" opacity="0.6" />
+                <line x1="42" y1="48" x2="74" y2="80" stroke="#F43F5E" stroke-width="2.5" />
+                <text x="58" y="104" text-anchor="middle" fill="#94A3B8" font-size="11">舊人生結束</text>
+                <path d="M 92 64 L 288 64" fill="none" stroke="#F59E0B" stroke-width="3" />
+                <polygon points="296,64 282,56 282,72" fill="#F59E0B" />
+                <circle cx="348" cy="64" r="32" fill="rgba(245,158,11,0.16)" stroke="#F59E0B" stroke-width="2.5" />
+                <text x="348" y="61" text-anchor="middle" fill="#F8FAFC" font-size="14" font-weight="700">新人生</text>
+                <text x="348" y="79" text-anchor="middle" fill="#FCD34D" font-size="11">扎根・不回頭</text>
+                <text x="190" y="50" text-anchor="middle" fill="#FCD34D" font-size="12">單程票：保留記憶重玩</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 4: MECHANICS ==================== -->
+      <section class="slide" data-title="去異世界的三種交通方式：召喚、轉移、轉生" data-sub="用職場生活類比，一秒分清三種入場機制"
+        data-notes="【口播重點】如果你常看到『召喚、轉移、轉生』覺得像在背名詞，其實用上班族的日常來比喻就超好懂：『召喚』就像你活得好好的，突然被老闆派去海外救火，任務完就想回家；『轉移』像搭捷運打瞌睡，醒來發現誤闖神祕車站；而《無職轉生》帶紅的『轉生』，則是徹底離職、舊帳號註銷，直接換一具全新身體從嬰兒重練！">
+        <div class="kicker"><span class="dot"></span>03 · THE ANALOGY · 三種入場護照</div>
+        <h2>去異世界的三種交通方式：外派、誤闖，還是重投胎？</h2>
+        <p class="lead">不需要背專有名詞，只要用「上班族」來對照，10 秒就能分清楚。</p>
+
+        <div class="grid-3">
+          <div class="card">
+            <svg viewBox="0 0 280 90" style="height:86px; width:100%;">
+              <rect x="4" y="8" width="272" height="74" rx="12" fill="#0B0F19" stroke="rgba(56,189,248,0.35)" />
+              <circle cx="52" cy="45" r="22" fill="rgba(56,189,248,0.14)" stroke="#38BDF8" stroke-width="2" />
+              <polygon points="52,29 66,53 38,53" fill="none" stroke="#38BDF8" stroke-width="1.8" />
+              <text x="90" y="38" fill="#38BDF8" font-size="13" font-family="JetBrains Mono, monospace">SUMMONING</text>
+              <text x="90" y="62" fill="#F8FAFC" font-size="20" font-weight="800">異世界召喚</text>
+            </svg>
+            <div class="card-title" style="font-size:18px; color:#7DD3FC;">職場類比：被外派海外救火</div>
+            <p class="card-body">主角在現實還活著，被異世界的國王或法師用魔法陣<strong>強行拉走</strong>去當勇者。</p>
+            <div class="tag-row">
+              <span class="pill">原本肉體</span>
+              <span class="pill">被動使命</span>
+              <span class="pill cyan">《零之使魔》</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <svg viewBox="0 0 280 90" style="height:86px; width:100%;">
+              <rect x="4" y="8" width="272" height="74" rx="12" fill="#0B0F19" stroke="rgba(255,255,255,0.18)" />
+              <circle cx="52" cy="45" r="22" fill="rgba(148,163,184,0.14)" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="5 3" />
+              <path d="M 42 45 L 62 45 M 56 39 L 62 45 L 56 51" fill="none" stroke="#F8FAFC" stroke-width="2" />
+              <text x="90" y="38" fill="#94A3B8" font-size="13" font-family="JetBrains Mono, monospace">TRANSFER</text>
+              <text x="90" y="62" fill="#F8FAFC" font-size="20" font-weight="800">異世界轉移</text>
+            </svg>
+            <div class="card-title" style="font-size:18px; color:#E2E8F0;">職場類比：搭車誤闖神祕站</div>
+            <p class="card-body">主角活著，因意外掉進古井、傳送門或奇異現象，<strong>連人帶衣服</strong>突然跑到異界。</p>
+            <div class="tag-row">
+              <span class="pill">原本肉體</span>
+              <span class="pill">突發求生</span>
+              <span class="pill">《犬夜叉》《Re:Zero》</span>
+            </div>
+          </div>
+
+          <div class="card highlight-amber">
+            <svg viewBox="0 0 280 90" style="height:86px; width:100%;">
+              <rect x="4" y="8" width="272" height="74" rx="12" fill="#0B0F19" stroke="rgba(245,158,11,0.55)" />
+              <circle cx="52" cy="45" r="22" fill="rgba(245,158,11,0.16)" stroke="#F59E0B" stroke-width="2" />
+              <path d="M 44 45 A 8 8 0 1 1 52 53" fill="none" stroke="#F59E0B" stroke-width="2.2" />
+              <polygon points="44,41 44,49 38,45" fill="#F59E0B" />
+              <text x="90" y="38" fill="#F59E0B" font-size="13" font-family="JetBrains Mono, monospace">REINCARNATION ★主流</text>
+              <text x="90" y="62" fill="#F8FAFC" font-size="20" font-weight="800">異世界轉生</text>
+            </svg>
+            <div class="card-title" style="font-size:18px; color:#FCD34D;">職場類比：離職換帳號重練</div>
+            <p class="card-body">主角在原世界<strong>已經死亡</strong>，帶著前世記憶投胎成嬰兒或新身體，徹底切斷回頭路。</p>
+            <div class="tag-row">
+              <span class="pill amber">全新身體</span>
+              <span class="pill amber">人生重開機</span>
+              <span class="pill amber">《無職轉生》</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 5: TRUCK-KUN ==================== -->
+      <section class="slide" data-title="為什麼主角動不動就被卡車撞？（貨車君）" data-sub="從 3 集魔法儀式到 10 秒一鍵開局的短影音邏輯"
+        data-notes="【口播重點】講到『轉生』，一定要分享一個動漫圈最出名的幽默迷因——『貨車君（Truck-kun）』。在《無職轉生》開場，主角為了救人被卡車撞死，下一秒就轉生到魔法世界。為什麼後來這麼多作品都愛用卡車？其實這跟我們現在滑短影音一樣：手機網文讀者沒耐心看作者花三集鋪陳『古老神殿的召喚儀式』，一輛卡車就像按『略過廣告』，10 秒內直接把主角送進正題！">
+        <div class="kicker crimson"><span class="dot"></span>04 · POP MEME · 動漫圈最忙的工具人</div>
+        <h2>為什麼主角動不動就被卡車撞？<span class="accent-crimson">「貨車君」</span>與 3 秒開局學</h2>
+        <p class="lead">這不是編劇偷懶，而是手機滑讀時代的「一鍵跳過片頭廣告」。</p>
+
+        <div class="svg-frame" style="flex:1; padding:22px 28px;">
+          <svg viewBox="0 0 1060 320" role="img" aria-label="1990s 緩慢儀式與 2010s 貨車君 10 秒開局對比">
+            <!-- Row 1: 1990s -->
+            <rect x="10" y="16" width="1040" height="122" rx="14" fill="#151B2B" stroke="rgba(255,255,255,0.1)" />
+            <text x="36" y="52" fill="#94A3B8" font-size="14" font-family="JetBrains Mono, monospace">1990s 傳統節奏</text>
+            <text x="36" y="84" fill="#F8FAFC" font-size="22" font-weight="700">慢熱鋪陳儀式感</text>
+            <text x="36" y="112" fill="#94A3B8" font-size="14">需要大量篇幅合理化「為何能跨界」</text>
+
+            <g transform="translate(350, 44)">
+              <rect x="0" y="8" width="160" height="52" rx="10" fill="#0D111C" stroke="#38BDF8" stroke-opacity="0.45" />
+              <text x="80" y="39" text-anchor="middle" fill="#CBD5E1" font-size="15">1. 發現神秘古書</text>
+              <path d="M 168 34 L 204 34" stroke="#64748B" stroke-width="2" />
+              <polygon points="208,34 198,28 198,40" fill="#64748B" />
+
+              <rect x="216" y="8" width="170" height="52" rx="10" fill="#0D111C" stroke="#38BDF8" stroke-opacity="0.45" />
+              <text x="301" y="39" text-anchor="middle" fill="#CBD5E1" font-size="15">2. 預言與召喚儀式</text>
+              <path d="M 394 34 L 430 34" stroke="#64748B" stroke-width="2" />
+              <polygon points="434,34 424,28 424,40" fill="#64748B" />
+
+              <rect x="442" y="8" width="215" height="52" rx="10" fill="rgba(56,189,248,0.12)" stroke="#38BDF8" />
+              <text x="549" y="39" text-anchor="middle" fill="#7DD3FC" font-size="15" font-weight="700">3. 耗時 1~3 集進入正題</text>
+            </g>
+
+            <!-- Row 2: 2010s+ -->
+            <rect x="10" y="164" width="1040" height="140" rx="14" fill="#151B2B" stroke="rgba(244,63,94,0.45)" />
+            <text x="36" y="200" fill="#F43F5E" font-size="14" font-family="JetBrains Mono, monospace">2010s+ 網文快節奏</text>
+            <text x="36" y="232" fill="#F8FAFC" font-size="22" font-weight="700">貨車君（Truck-kun）</text>
+            <text x="36" y="262" fill="#CBD5E1" font-size="14">代表：《無職轉生》開場救人被撞</text>
+            <text x="36" y="284" fill="#94A3B8" font-size="13">像短影音前 3 秒鉤子，立刻切入新世界</text>
+
+            <!-- Stylized Truck SVG -->
+            <g transform="translate(360, 198)">
+              <!-- Speed lines -->
+              <line x1="-22" y1="22" x2="10" y2="22" stroke="#F43F5E" stroke-width="2.5" opacity="0.7" />
+              <line x1="-34" y1="38" x2="6" y2="38" stroke="#F59E0B" stroke-width="2.5" opacity="0.8" />
+              <line x1="-18" y1="54" x2="12" y2="54" stroke="#F43F5E" stroke-width="2" opacity="0.6" />
+              <!-- Cargo box -->
+              <rect x="18" y="8" width="110" height="56" rx="6" fill="#1E293B" stroke="#F43F5E" stroke-width="2" />
+              <text x="73" y="42" text-anchor="middle" fill="#FDA4AF" font-size="13" font-weight="700">異世界專車</text>
+              <!-- Cab -->
+              <path d="M 132 22 L 166 22 L 180 40 L 180 64 L 132 64 Z" fill="#F43F5E" opacity="0.9" />
+              <path d="M 140 28 L 161 28 L 170 40 L 140 40 Z" fill="#0D111C" />
+              <!-- Headlight beam -->
+              <polygon points="180,48 250,30 250,66" fill="#F59E0B" opacity="0.22" />
+              <!-- Wheels -->
+              <circle cx="52" cy="68" r="12" fill="#0D111C" stroke="#F8FAFC" stroke-width="3" />
+              <circle cx="154" cy="68" r="12" fill="#0D111C" stroke="#F8FAFC" stroke-width="3" />
+            </g>
+
+            <!-- Instant arrow to New World -->
+            <g transform="translate(620, 212)">
+              <path d="M 0 24 L 116 24" stroke="#F59E0B" stroke-width="4" stroke-dasharray="8 6" />
+              <polygon points="126,24 110,14 110,34" fill="#F59E0B" />
+              <text x="58" y="10" text-anchor="middle" fill="#FCD34D" font-size="13" font-weight="700">10 秒直達</text>
+
+              <rect x="142" y="-6" width="248" height="62" rx="12" fill="rgba(245,158,11,0.15)" stroke="#F59E0B" stroke-width="2" />
+              <text x="266" y="22" text-anchor="middle" fill="#F8FAFC" font-size="17" font-weight="800">叮！轉生至劍與魔法世界</text>
+              <text x="266" y="44" text-anchor="middle" fill="#FCD34D" font-size="13">零鋪陳門檻・直接開始第二人生</text>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 6: 40-YEAR TIMELINE ==================== -->
+      <section class="slide" data-title="40 年風格演進：從機器人拓荒到全民轉生" data-sub="五個時代節點，對應日本從泡沫經濟到數位世代的社會變遷"
+        data-notes="【口播重點】把鏡頭拉遠，其實日本異世界動漫的 40 年演進，簡直是一部日本現代社會史。1980 年代泡沫經濟高峰，大家過著富足卻無聊的日常，所以《聖戰士丹拜因》開著機器人去『第二地球』拓荒；90 年代則是少女漫畫黃金期，像《夢幻遊戲》、《魔法騎士雷阿斯》和《犬夜叉》；2000 年代泡沫破滅後，《零之使魔》與《刀劍神域》把異世界變成『一鍵登入的遊戲』；2010 年代網文爆發，《無職轉生》把『死後重活』變成標準；到了 2020 年代，題材徹底百花齊放。">
+        <div class="kicker"><span class="dot"></span>05 · 40-YEAR EVOLUTION · 時代演進時間軸</div>
+        <h2>異世界怎麼從「機器人拓荒」變成「全民轉生」？</h2>
+        <p class="lead">每個十年的流行風格，都精準反映當時的經濟與娛樂習慣。</p>
+
+        <div class="svg-frame" style="flex:1; padding:18px;">
+          <svg viewBox="0 0 1100 390" role="img" aria-label="1980年代至2020年代異世界動漫演進時間軸">
+            <!-- Horizontal Timeline Axis -->
+            <defs>
+              <linearGradient id="tlLine" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#38BDF8" />
+                <stop offset="60%" stop-color="#F59E0B" />
+                <stop offset="100%" stop-color="#F43F5E" />
+              </linearGradient>
+            </defs>
+            <line x1="60" y1="195" x2="1040" y2="195" stroke="url(#tlLine)" stroke-width="4" stroke-linecap="round" />
+
+            <!-- Era 1: 1980s (Top) -->
+            <g transform="translate(110, 195)">
+              <circle r="10" fill="#0D111C" stroke="#38BDF8" stroke-width="4" />
+              <line x1="0" y1="-12" x2="0" y2="-46" stroke="#38BDF8" stroke-width="1.5" stroke-dasharray="3 3" />
+              <rect x="-95" y="-172" width="190" height="122" rx="12" fill="#151B2B" stroke="rgba(56,189,248,0.4)" />
+              <text x="0" y="-146" text-anchor="middle" fill="#38BDF8" font-size="13" font-family="JetBrains Mono, monospace">1980s · 拓荒期</text>
+              <text x="0" y="-122" text-anchor="middle" fill="#F8FAFC" font-size="16" font-weight="800">機器人＋第二地球</text>
+              <text x="0" y="-96" text-anchor="middle" fill="#CBD5E1" font-size="12">泡沫經濟渴望未知冒險</text>
+              <text x="0" y="-74" text-anchor="middle" fill="#94A3B8" font-size="12">《聖戰士丹拜因》(1983)</text>
+              <text x="0" y="-58" text-anchor="middle" fill="#94A3B8" font-size="12">《魔神英雄傳》(1988)</text>
+            </g>
+
+            <!-- Era 2: 1990s (Bottom) -->
+            <g transform="translate(330, 195)">
+              <circle r="10" fill="#0D111C" stroke="#38BDF8" stroke-width="4" />
+              <line x1="0" y1="12" x2="0" y2="46" stroke="#38BDF8" stroke-width="1.5" stroke-dasharray="3 3" />
+              <rect x="-98" y="48" width="196" height="126" rx="12" fill="#151B2B" stroke="rgba(56,189,248,0.35)" />
+              <text x="0" y="74" text-anchor="middle" fill="#7DD3FC" font-size="13" font-family="JetBrains Mono, monospace">1990s · 黃金期</text>
+              <text x="0" y="98" text-anchor="middle" fill="#F8FAFC" font-size="16" font-weight="800">少女史詩與返鄉</text>
+              <text x="0" y="122" text-anchor="middle" fill="#CBD5E1" font-size="12">厚重世界觀・戀愛與成長</text>
+              <text x="0" y="144" text-anchor="middle" fill="#94A3B8" font-size="12">《夢幻遊戲》《十二國記》</text>
+              <text x="0" y="160" text-anchor="middle" fill="#94A3B8" font-size="12">《犬夜叉》《神隱少女》</text>
+            </g>
+
+            <!-- Era 3: 2000s (Top) -->
+            <g transform="translate(550, 195)">
+              <circle r="10" fill="#0D111C" stroke="#F59E0B" stroke-width="4" />
+              <line x1="0" y1="-12" x2="0" y2="-46" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="3 3" />
+              <rect x="-98" y="-172" width="196" height="122" rx="12" fill="#151B2B" stroke="rgba(245,158,11,0.4)" />
+              <text x="0" y="-146" text-anchor="middle" fill="#F59E0B" font-size="13" font-family="JetBrains Mono, monospace">2000s · 轉折期</text>
+              <text x="0" y="-122" text-anchor="middle" fill="#F8FAFC" font-size="16" font-weight="800">輕小說一鍵登入</text>
+              <text x="0" y="-96" text-anchor="middle" fill="#CBD5E1" font-size="12">借用 RPG 常識與網遊介面</text>
+              <text x="0" y="-74" text-anchor="middle" fill="#94A3B8" font-size="12">《零之使魔》(2004)</text>
+              <text x="0" y="-58" text-anchor="middle" fill="#94A3B8" font-size="12">《刀劍神域》(網小/2009)</text>
+            </g>
+
+            <!-- Era 4: 2010s (Bottom - Spotlight) -->
+            <g transform="translate(770, 195)">
+              <circle r="13" fill="#F59E0B" stroke="#F8FAFC" stroke-width="3" />
+              <line x1="0" y1="15" x2="0" y2="46" stroke="#F59E0B" stroke-width="2" />
+              <rect x="-105" y="48" width="210" height="132" rx="12" fill="rgba(245,158,11,0.14)" stroke="#F59E0B" stroke-width="2" />
+              <text x="0" y="74" text-anchor="middle" fill="#FCD34D" font-size="13" font-family="JetBrains Mono, monospace">2010s · 爆發定型 ★</text>
+              <text x="0" y="98" text-anchor="middle" fill="#F8FAFC" font-size="16" font-weight="800">成為系＋死後轉生</text>
+              <text x="0" y="122" text-anchor="middle" fill="#CBD5E1" font-size="12">人生重開機成壓倒性主流</text>
+              <text x="0" y="144" text-anchor="middle" fill="#FCD34D" font-size="13" font-weight="700">《無職轉生》(2012)</text>
+              <text x="0" y="164" text-anchor="middle" fill="#CBD5E1" font-size="12">《Re:Zero》《美好世界》</text>
+            </g>
+
+            <!-- Era 5: 2020s (Top) -->
+            <g transform="translate(975, 195)">
+              <circle r="10" fill="#0D111C" stroke="#F43F5E" stroke-width="4" />
+              <line x1="0" y1="-12" x2="0" y2="-46" stroke="#F43F5E" stroke-width="1.5" stroke-dasharray="3 3" />
+              <rect x="-105" y="-172" width="210" height="122" rx="12" fill="#151B2B" stroke="rgba(244,63,94,0.45)" />
+              <text x="0" y="-146" text-anchor="middle" fill="#F43F5E" font-size="13" font-family="JetBrains Mono, monospace">2020s · 飽和細分</text>
+              <text x="0" y="-122" text-anchor="middle" fill="#F8FAFC" font-size="16" font-weight="800">反套路與情緒出口</text>
+              <text x="0" y="-96" text-anchor="middle" fill="#CBD5E1" font-size="12">佔新番 15%・多元混搭</text>
+              <text x="0" y="-74" text-anchor="middle" fill="#94A3B8" font-size="12">惡役千金・慢活・退隊流</text>
+              <text x="0" y="-58" text-anchor="middle" fill="#94A3B8" font-size="12">逆異世界・《異世界舅舅》</text>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 7: MUSHOKU TENSEI SPOTLIGHT ==================== -->
+      <section class="slide" data-title="主軸案例：《無職轉生》如何改寫一個時代？" data-sub="如果 34 歲給你一顆「保留記憶回到 0 歲」的按鈕？"
+        data-notes="【口播重點】如果想挑一部作品來理解現代異世界，最好的座標就是《無職轉生》。先問大家一個問題：如果今天給你一顆按鈕，保留所有社會經驗、回到 0 歲重玩一次人生，你會按嗎？《無職轉生》講的就是一名 34 歲長期繭居的男子，意外身亡後轉生成異世界嬰兒魯迪烏斯，決定『這次一定要拿出真本事認真活』。它雖然不是史上第一部轉生網小，但它集當時網路小說套路之大成，在免費網站霸榜累計第一名整整五年多、銷量破千萬冊，業界甚至為了把它拍好，專門成立一家新動畫公司 Studio Bind。">
+        <div class="kicker amber"><span class="dot"></span>06 · SPOTLIGHT CASE · 核心里程碑案例（無劇透）</div>
+        <h2>《無職轉生》：如果 34 歲給你一顆<span class="accent-amber">「回到 0 歲」</span>的按鈕？</h2>
+        <p class="lead">它不是史上第一部轉生故事，卻是把「重活一次」變成現代動漫標準藍圖的關鍵座標。</p>
+
+        <div class="split-2">
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div class="quote-banner">
+              「34 歲無業繭居族意外身亡，保留記憶轉生成魔法世界嬰兒——這次，不再虛度人生。」
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+              <div class="stat-box">
+                <div class="stat-num accent-amber" style="font-size:32px;">5 年+</div>
+                <div class="stat-label">2013–2019 蟬聯「成為小說家吧」累計排行榜第 1 名</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-num accent-cyan" style="font-size:32px;">1,000 萬+</div>
+                <div class="stat-label">輕小說與漫畫系列累計發行量，2021–2026 動畫跨三期</div>
+              </div>
+            </div>
+            <div class="card" style="padding:18px 22px;">
+              <div class="card-title" style="font-size:17px;">為何業界特地為它成立專屬公司 Studio Bind？</div>
+              <p class="card-body" style="font-size:15px;">因為它不只是打怪爽片，而是橫跨主角一生的長篇成長史詩，需要長期穩定的高規格製作團隊才能還原。</p>
+            </div>
+          </div>
+
+          <div class="svg-frame">
+            <svg viewBox="0 0 460 390" role="img" aria-label="無職轉生承先啟後生態定位圖">
+              <text x="230" y="28" text-anchor="middle" fill="#94A3B8" font-size="13" font-family="JetBrains Mono, monospace">HOW MUSHOKU TENSEI CODIFIED THE GENRE</text>
+              <!-- Upstream influences -->
+              <rect x="24" y="54" width="186" height="78" rx="12" fill="#151B2B" stroke="rgba(56,189,248,0.45)" />
+              <text x="117" y="84" text-anchor="middle" fill="#7DD3FC" font-size="15" font-weight="700">《零之使魔》(2004)</text>
+              <text x="117" y="108" text-anchor="middle" fill="#94A3B8" font-size="12">同人二創孕育網文土壤</text>
+
+              <rect x="250" y="54" width="186" height="78" rx="12" fill="#151B2B" stroke="rgba(56,189,248,0.45)" />
+              <text x="343" y="84" text-anchor="middle" fill="#7DD3FC" font-size="15" font-weight="700">《刀劍神域》(2012)</text>
+              <text x="343" y="108" text-anchor="middle" fill="#94A3B8" font-size="12">引爆網小→動畫商業浪潮</text>
+
+              <!-- Arrows down -->
+              <path d="M 117 132 L 195 174" stroke="#38BDF8" stroke-width="2" />
+              <path d="M 343 132 L 265 174" stroke="#38BDF8" stroke-width="2" />
+
+              <!-- Center Hub: Mushoku Tensei -->
+              <rect x="64" y="176" width="332" height="92" rx="16" fill="rgba(245,158,11,0.16)" stroke="#F59E0B" stroke-width="2.5" />
+              <text x="230" y="208" text-anchor="middle" fill="#FCD34D" font-size="12" font-family="JetBrains Mono, monospace">2012 WEB SERIALIZATION · 集大成座標</text>
+              <text x="230" y="236" text-anchor="middle" fill="#F8FAFC" font-size="22" font-weight="800">《無職轉生》</text>
+              <text x="230" y="256" text-anchor="middle" fill="#CBD5E1" font-size="12">卡車轉生・從嬰兒重練・直面創傷與成長</text>
+
+              <!-- Arrow down to impact -->
+              <line x1="230" y1="268" x2="230" y2="302" stroke="#F59E0B" stroke-width="2.5" />
+              <polygon points="230,308 223,296 237,296" fill="#F59E0B" />
+
+              <!-- Downstream impact -->
+              <rect x="30" y="312" width="400" height="62" rx="12" fill="#151B2B" stroke="rgba(244,63,94,0.45)" />
+              <text x="230" y="338" text-anchor="middle" fill="#FDA4AF" font-size="15" font-weight="700">全面改寫 2010s 後半動漫生態</text>
+              <text x="230" y="360" text-anchor="middle" fill="#94A3B8" font-size="12">「死後轉生重來」取代「召喚」，成為當代預設模板</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 8: INDUSTRY & NAROU-KEI ==================== -->
+      <section class="slide" data-title="動漫界的 YouTuber 出道模式：「成為系」如何量產爆款？" data-sub="從免費網路投稿到全球串流，低風險商業飛輪"
+        data-notes="【口播重點】大家一定好奇：為什麼日本動畫公司敢一直瘋狂拍異世界，不怕賠錢嗎？答案藏在一個叫『成為小說家吧』的免費網站——你可以把它想成『小說界的 YouTube』。以前作家要投稿出版社比賽碰運氣，像《無職轉生》作者就整整被退稿五年；但在成為小說家吧，素人直接免費連載，誰紅、誰留言多，排行榜一目了然。出版社和動畫公司只要直接挑榜單前幾名來改編，還沒開拍就已經有死忠基本盤，商業風險極低！">
+        <div class="kicker"><span class="dot"></span>07 · INDUSTRY ENGINE · 成為系（なろう系）商業鏈</div>
+        <h2>動漫界的 YouTuber 出道模式：為何動畫公司愛拍異世界？</h2>
+        <p class="lead">免費網站「成為小說家吧」先幫出版社做完市場測試，挑榜單改編幾乎零風險。</p>
+
+        <div class="svg-frame" style="height:245px; margin-bottom:22px; padding:18px 24px;">
+          <svg viewBox="0 0 1080 185" role="img" aria-label="成為系五階段商業改編漏斗">
+            <!-- Step 1 -->
+            <rect x="10" y="24" width="184" height="136" rx="14" fill="#151B2B" stroke="rgba(56,189,248,0.45)" />
+            <text x="102" y="54" text-anchor="middle" fill="#38BDF8" font-size="12" font-family="JetBrains Mono, monospace">STEP 01</text>
+            <text x="102" y="84" text-anchor="middle" fill="#F8FAFC" font-size="18" font-weight="800">素人免費連載</text>
+            <text x="102" y="112" text-anchor="middle" fill="#94A3B8" font-size="13">不靠出版社審稿</text>
+            <text x="102" y="132" text-anchor="middle" fill="#94A3B8" font-size="13">即時依讀者回饋調整</text>
+
+            <path d="M 200 92 L 222 92" stroke="#64748B" stroke-width="2.5" />
+            <polygon points="226,92 216,86 216,98" fill="#64748B" />
+
+            <!-- Step 2 -->
+            <rect x="232" y="24" width="184" height="136" rx="14" fill="#151B2B" stroke="rgba(56,189,248,0.55)" />
+            <text x="324" y="54" text-anchor="middle" fill="#38BDF8" font-size="12" font-family="JetBrains Mono, monospace">STEP 02</text>
+            <text x="324" y="84" text-anchor="middle" fill="#F8FAFC" font-size="18" font-weight="800">排行榜驗證流量</text>
+            <text x="324" y="112" text-anchor="middle" fill="#94A3B8" font-size="13">點閱與書籤數透明</text>
+            <text x="324" y="132" text-anchor="middle" fill="#7DD3FC" font-size="13">免費完成市場測驗</text>
+
+            <path d="M 422 92 L 444 92" stroke="#64748B" stroke-width="2.5" />
+            <polygon points="448,92 438,86 438,98" fill="#64748B" />
+
+            <!-- Step 3 -->
+            <rect x="454" y="24" width="184" height="136" rx="14" fill="#151B2B" stroke="rgba(245,158,11,0.5)" />
+            <text x="546" y="54" text-anchor="middle" fill="#F59E0B" font-size="12" font-family="JetBrains Mono, monospace">STEP 03</text>
+            <text x="546" y="84" text-anchor="middle" fill="#F8FAFC" font-size="18" font-weight="800">實體輕小說化</text>
+            <text x="546" y="112" text-anchor="middle" fill="#94A3B8" font-size="13">配專業插畫與修潤</text>
+            <text x="546" y="132" text-anchor="middle" fill="#94A3B8" font-size="13">（例：MF Books）</text>
+
+            <path d="M 644 92 L 666 92" stroke="#F59E0B" stroke-width="2.5" />
+            <polygon points="670,92 660,86 660,98" fill="#F59E0B" />
+
+            <!-- Step 4 -->
+            <rect x="676" y="24" width="184" height="136" rx="14" fill="#151B2B" stroke="rgba(245,158,11,0.6)" />
+            <text x="768" y="54" text-anchor="middle" fill="#F59E0B" font-size="12" font-family="JetBrains Mono, monospace">STEP 04</text>
+            <text x="768" y="84" text-anchor="middle" fill="#F8FAFC" font-size="18" font-weight="800">改編連載漫畫</text>
+            <text x="768" y="112" text-anchor="middle" fill="#94A3B8" font-size="13">降低文字閱讀門檻</text>
+            <text x="768" y="132" text-anchor="middle" fill="#94A3B8" font-size="13">擴大視覺受眾群</text>
+
+            <path d="M 866 92 L 888 92" stroke="#F43F5E" stroke-width="2.5" />
+            <polygon points="892,92 882,86 882,98" fill="#F43F5E" />
+
+            <!-- Step 5 -->
+            <rect x="898" y="24" width="172" height="136" rx="14" fill="rgba(244,63,94,0.14)" stroke="#F43F5E" stroke-width="2" />
+            <text x="984" y="54" text-anchor="middle" fill="#FDA4AF" font-size="12" font-family="JetBrains Mono, monospace">STEP 05</text>
+            <text x="984" y="84" text-anchor="middle" fill="#F8FAFC" font-size="18" font-weight="800">動畫化＋出海</text>
+            <text x="984" y="112" text-anchor="middle" fill="#CBD5E1" font-size="13">自帶基本盤收視</text>
+            <text x="984" y="132" text-anchor="middle" fill="#FDA4AF" font-size="13">全球串流穩定變現</text>
+          </svg>
+        </div>
+
+        <div class="split-balanced" style="flex:0;">
+          <div class="card" style="padding:18px 22px;">
+            <div class="card-title" style="font-size:17px; color:#7DD3FC;">為什麼書名越來越長、像一整句簡介？</div>
+            <p class="card-body" style="font-size:15px;">因為網站上每天有幾千篇新連載，書名就是你的「YouTube 縮圖標題」——3 秒內沒講清楚賣點，讀者就滑走了。</p>
+          </div>
+          <div class="card" style="padding:18px 22px;">
+            <div class="card-title" style="font-size:17px; color:#FCD34D;">《無職轉生》的真實逆襲故事</div>
+            <p class="card-body" style="font-size:15px;">作者原本向傳統出版社投稿五年屢屢碰壁，改到免費網站連載卻意外爆紅，開啟了整波網路小說改編熱潮。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 9: 2020s 4 SUBGENRES ==================== -->
+      <section class="slide" data-title="2020s 四大變體：現代社畜的四種情緒處方箋" data-sub="惡役千金、慢活美食、退隊流、逆異世界"
+        data-notes="【口播重點】到了 2020 年代，大家看『轉生打魔王』早就看到膩了，於是創作者發明了四種超有反差的新花樣——有趣的是，每一種都精準戳中現代上班族的日常情緒！覺得職場太捲不想拚了？看『慢活美食』去異世界開網購做菜；覺得在公司被無能主管排擠？看『退隊流』演被開除後反成搶手大佬；想看聰明女主靠腦袋逆轉命運？看爆紅的『惡役千金』；想看荒謬紓壓喜劇？看『逆異世界』讓魔王來東京打工繳房租！">
+        <div class="kicker crimson"><span class="dot"></span>08 · 2020s SUBGENRES · 當打魔王看到膩之後</div>
+        <h2>現代異世界四大變體：其實是社畜的<span class="accent-amber">情緒處方箋</span></h2>
+        <p class="lead">把誇張的奇幻包裝拆開，裡面裝的都是現代人的職場、人際與躺平渴望。</p>
+
+        <div class="svg-frame" style="flex:1; padding:16px 24px;">
+          <svg viewBox="0 0 1060 390" role="img" aria-label="現代異世界四大變體情緒四象限圖">
+            <!-- Axes -->
+            <line x1="530" y1="26" x2="530" y2="364" stroke="rgba(255,255,255,0.16)" stroke-width="1.5" stroke-dasharray="5 5" />
+            <line x1="36" y1="195" x2="1024" y2="195" stroke="rgba(255,255,255,0.16)" stroke-width="1.5" stroke-dasharray="5 5" />
+            <!-- Axis Labels -->
+            <text x="530" y="16" text-anchor="middle" fill="#F43F5E" font-size="13" font-weight="700">▲ 逆襲翻盤・證明價值</text>
+            <text x="530" y="384" text-anchor="middle" fill="#38BDF8" font-size="13" font-weight="700">▼ 療癒躺平・紓壓喜劇</text>
+            <text x="12" y="199" fill="#94A3B8" font-size="12" font-weight="700">◀ 逃往異界</text>
+            <text x="1048" y="199" text-anchor="end" fill="#94A3B8" font-size="12" font-weight="700">反觀現實 ▶</text>
+
+            <!-- Q1: Top-Left (退隊流) -->
+            <g transform="translate(102, 38)">
+              <rect width="398" height="136" rx="14" fill="#151B2B" stroke="rgba(244,63,94,0.45)" />
+              <text x="22" y="32" fill="#FDA4AF" font-size="12" font-family="JetBrains Mono, monospace">KICKED FROM THE PARTY</text>
+              <text x="22" y="60" fill="#F8FAFC" font-size="22" font-weight="800">退隊流（職場打臉）</text>
+              <text x="22" y="88" fill="#CBD5E1" font-size="14">功勞被吞、被無能隊伍炒魷魚後，</text>
+              <text x="22" y="110" fill="#CBD5E1" font-size="14">離隊立刻展露實力，讓前東家後悔莫及。</text>
+            </g>
+
+            <!-- Q2: Top-Right (惡役千金) -->
+            <g transform="translate(560, 38)">
+              <rect width="398" height="136" rx="14" fill="#151B2B" stroke="rgba(245,158,11,0.5)" />
+              <text x="22" y="32" fill="#FCD34D" font-size="12" font-family="JetBrains Mono, monospace">VILLAINESS / OTOME ISEKAI</text>
+              <text x="22" y="60" fill="#F8FAFC" font-size="22" font-weight="800">惡役千金（改命大女主）</text>
+              <text x="22" y="88" fill="#CBD5E1" font-size="14">轉生成戀愛遊戲裡注定悲劇的反派大小姐，</text>
+              <text x="22" y="110" fill="#CBD5E1" font-size="14">靠智慧與現代商戰改寫命運（跨足韓漫熱潮）。</text>
+            </g>
+
+            <!-- Q3: Bottom-Left (慢活美食) -->
+            <g transform="translate(102, 216)">
+              <rect width="398" height="136" rx="14" fill="#151B2B" stroke="rgba(56,189,248,0.45)" />
+              <text x="22" y="32" fill="#7DD3FC" font-size="12" font-family="JetBrains Mono, monospace">SLOW LIFE / GOURMET</text>
+              <text x="22" y="60" fill="#F8FAFC" font-size="22" font-weight="800">慢活美食（拒絕內捲）</text>
+              <text x="22" y="88" fill="#CBD5E1" font-size="14">不想打魔王、不想拚績效！在異世界種田、</text>
+              <text x="22" y="110" fill="#CBD5E1" font-size="14">開網購做宵夜（例：《異世界流浪美食家》）。</text>
+            </g>
+
+            <!-- Q4: Bottom-Right (逆異世界) -->
+            <g transform="translate(560, 216)">
+              <rect width="398" height="136" rx="14" fill="#151B2B" stroke="rgba(148,163,184,0.4)" />
+              <text x="22" y="32" fill="#CBD5E1" font-size="12" font-family="JetBrains Mono, monospace">REVERSE ISEKAI</text>
+              <text x="22" y="60" fill="#F8FAFC" font-size="22" font-weight="800">逆異世界（反差喜劇）</text>
+              <text x="22" y="88" fill="#CBD5E1" font-size="14">方向顛倒！讓異世界魔王來東京打工繳房租</text>
+              <text x="22" y="110" fill="#CBD5E1" font-size="14">（例：《打工吧！魔王大人》、《龍女僕》）。</text>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <!-- ==================== SLIDE 10: TAKEAWAY ==================== -->
+      <section class="slide" data-title="它不只是逃避現實，更是這個時代的一面鏡子" data-sub="破除迷思＋帶走三個聊天關鍵詞"
+        data-notes="【結尾口播】最後留給大家一句話：很多人沒看過異世界，會直覺覺得『那不就是無腦逃避現實的爽片嗎？』確實市場上有不少快餐作品，但如果把這 40 年串起來看，從泡沫經濟渴望拓荒，到今天大家渴望按一顆重開機按鈕，異世界其實像一面時代鏡子，照出每個世代最誠實的焦慮與願望。下次朋友聊起動漫，你只要拋出『召喚 vs 轉生』、『貨車君』或『無職轉生』這三個詞，就能立刻聊進門道！謝謝大家！">
+        <div class="kicker amber"><span class="dot"></span>09 · TAKEAWAY · 帶走一句話與聊天錦囊</div>
+        <h2>它不只是逃避現實，更是<span class="accent-cyan">這個時代的一面鏡子</span></h2>
+
+        <div class="split-balanced" style="margin:14px 0 22px; flex:0;">
+          <div class="card" style="border-color:rgba(244,63,94,0.35);">
+            <div class="kicker crimson" style="margin-bottom:0;">常見迷思 MYTH</div>
+            <div class="card-title">「異世界不就是千篇一律的無腦爽片？」</div>
+            <p class="card-body">量產作品確實不少，但真正留名青史的作品（如《神隱少女》、《無職轉生》）都在借奇幻外殼探討成長、遺憾與人際連結。</p>
+          </div>
+          <div class="card highlight-amber">
+            <div class="kicker amber" style="margin-bottom:0;">真實樣貌 REALITY</div>
+            <div class="card-title">「一部用奇幻寫成的 40 年社會情緒史」</div>
+            <p class="card-body">從 80 年代富足卻無聊的拓荒夢，到 2020 年代社畜渴望重來與慢活——每一波流行都記錄著大眾最真實的集體心理。</p>
+          </div>
+        </div>
+
+        <div class="card" style="flex:1; justify-content:space-between; background:rgba(21,27,43,0.9);">
+          <div>
+            <div class="kicker" style="margin-bottom:10px;">下次跟朋友聊動漫，你可以輕鬆接話的 3 個關鍵詞</div>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px;">
+              <div style="background:#0D111C; border:1px solid var(--border); border-radius:12px; padding:14px 16px;">
+                <div style="font-size:16px; font-weight:800; color:#7DD3FC; margin-bottom:4px;">1. 召喚 vs. 轉生</div>
+                <div style="font-size:13px; color:#94A3B8; line-height:1.5;">「以前是外派想回家，現在流行直接換帳號重練！」</div>
+              </div>
+              <div style="background:#0D111C; border:1px solid var(--border); border-radius:12px; padding:14px 16px;">
+                <div style="font-size:16px; font-weight:800; color:#FDA4AF; margin-bottom:4px;">2. 貨車君 &amp; 成為系</div>
+                <div style="font-size:13px; color:#94A3B8; line-height:1.5;">「網文時代講求 10 秒開局，排行榜紅了再拍動畫。」</div>
+              </div>
+              <div style="background:#0D111C; border:1px solid var(--border); border-radius:12px; padding:14px 16px;">
+                <div style="font-size:16px; font-weight:800; color:#FCD34D; margin-bottom:4px;">3. 《無職轉生》</div>
+                <div style="font-size:13px; color:#94A3B8; line-height:1.5;">「它就像異世界版人生重開機傳記，把轉生推成主流。」</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid var(--border); font-size:12px; color:var(--text-muted); font-family:var(--font-mono);">
+            <span>WIKI SOURCES: mushoku-tensei · isekai · tensei-vs-summoning · narou-kei · truck-kun · isekai-subgenres</span>
+            <span>DATA: ANN (2021 / 2025) · CCC/TNL · Moegirlpedia</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom HUD -->
+      <footer id="hud">
+        <div class="hud-left">
+          <span class="hud-brand">ANIME LLM WIKI · CINEMA DARK</span>
+        </div>
+        <div class="hud-controls">
+          <button class="hud-btn" id="btn-prev" title="上一頁 (←)">←</button>
+          <button class="hud-btn" id="btn-page" title="投影片總覽 (G)">01 / 10</button>
+          <button class="hud-btn" id="btn-next" title="下一頁 (→ / Space)">→</button>
+          <button class="hud-btn" id="btn-notes" title="講者備忘錄 (S)">S 備忘錄</button>
+          <button class="hud-btn" id="btn-grid" title="縮圖總覽 (G)">G 總覽</button>
+          <button class="hud-btn" id="btn-fs" title="全螢幕 (F)">F 全螢幕</button>
+        </div>
+      </footer>
+
+      <div id="progress-track" title="點擊跳轉進度">
+        <div id="progress-bar"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Speaker Notes Drawer -->
+  <aside id="notes-drawer" aria-label="講者備忘錄">
+    <div class="notes-header">
+      <span id="notes-slide-label">SPEAKER NOTES · SLIDE 01</span>
+      <button class="hud-btn" id="btn-close-notes">關閉 (S / Esc)</button>
+    </div>
+    <div id="notes-content"></div>
+  </aside>
+
+  <!-- Grid Overview Modal -->
+  <div id="grid-modal" role="dialog" aria-modal="true" aria-label="投影片總覽">
+    <div class="grid-header">
+      <div>
+        <div class="kicker amber" style="margin-bottom:4px;"><span class="dot"></span>SLIDE OVERVIEW</div>
+        <h2 style="font-size:26px; margin:0;">投影片總覽（點擊任意頁跳轉）</h2>
+      </div>
+      <button class="hud-btn" id="btn-close-grid" style="font-size:14px; padding:8px 16px;">關閉 (G / Esc)</button>
+    </div>
+    <div class="grid-list" id="grid-list"></div>
+  </div>
+
+  <script>
+    (function () {
+      const stage = document.getElementById("deck-stage");
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const total = slides.length;
+      const btnPrev = document.getElementById("btn-prev");
+      const btnNext = document.getElementById("btn-next");
+      const btnPage = document.getElementById("btn-page");
+      const btnNotes = document.getElementById("btn-notes");
+      const btnGrid = document.getElementById("btn-grid");
+      const btnFs = document.getElementById("btn-fs");
+      const progressBar = document.getElementById("progress-bar");
+      const progressTrack = document.getElementById("progress-track");
+      const notesDrawer = document.getElementById("notes-drawer");
+      const notesLabel = document.getElementById("notes-slide-label");
+      const notesContent = document.getElementById("notes-content");
+      const btnCloseNotes = document.getElementById("btn-close-notes");
+      const gridModal = document.getElementById("grid-modal");
+      const gridList = document.getElementById("grid-list");
+      const btnCloseGrid = document.getElementById("btn-close-grid");
+
+      let current = 0;
+      let notesOpen = false;
+      let gridOpen = false;
+
+      function pad(n) {
+        return String(n).padStart(2, "0");
+      }
+
+      function scaleStage() {
+        const padX = 24;
+        const padY = 24;
+        const scale = Math.min(
+          (window.innerWidth - padX) / 1280,
+          (window.innerHeight - padY) / 720
+        );
+        stage.style.transform = `scale(${Math.max(0.2, scale)})`;
+      }
+
+      function buildGrid() {
+        gridList.innerHTML = "";
+        slides.forEach((s, i) => {
+          const item = document.createElement("div");
+          item.className = "grid-item" + (i === current ? " current" : "");
+          item.innerHTML = `
+            <div class="grid-num">SLIDE ${pad(i + 1)} / ${pad(total)}</div>
+            <div class="grid-title">${s.dataset.title || ""}</div>
+            <div class="grid-sub">${s.dataset.sub || ""}</div>
+          `;
+          item.addEventListener("click", () => {
+            goTo(i);
+            toggleGrid(false);
+          });
+          gridList.appendChild(item);
+        });
+      }
+
+      function updateUI() {
+        slides.forEach((s, i) => {
+          s.classList.toggle("active", i === current);
+        });
+        btnPage.textContent = `${pad(current + 1)} / ${pad(total)}`;
+        progressBar.style.width = `${((current + 1) / total) * 100}%`;
+        const activeSlide = slides[current];
+        notesLabel.textContent = `SPEAKER NOTES · SLIDE ${pad(current + 1)} — ${activeSlide.dataset.title || ""}`;
+        notesContent.textContent = activeSlide.dataset.notes || "（本頁無額外講者備忘錄）";
+        if (gridOpen) buildGrid();
+        try {
+          history.replaceState(null, "", `#slide-${current + 1}`);
+        } catch (e) {}
+      }
+
+      function goTo(index) {
+        current = Math.max(0, Math.min(total - 1, index));
+        updateUI();
+      }
+
+      function toggleNotes(force) {
+        notesOpen = typeof force === "boolean" ? force : !notesOpen;
+        notesDrawer.classList.toggle("open", notesOpen);
+        btnNotes.classList.toggle("active-toggle", notesOpen);
+      }
+
+      function toggleGrid(force) {
+        gridOpen = typeof force === "boolean" ? force : !gridOpen;
+        if (gridOpen) buildGrid();
+        gridModal.classList.toggle("open", gridOpen);
+        btnGrid.classList.toggle("active-toggle", gridOpen);
+      }
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen?.().catch(() => {});
+        } else {
+          document.exitFullscreen?.().catch(() => {});
+        }
+      }
+
+      // Events
+      btnPrev.addEventListener("click", () => goTo(current - 1));
+      btnNext.addEventListener("click", () => goTo(current + 1));
+      btnPage.addEventListener("click", () => toggleGrid());
+      btnNotes.addEventListener("click", () => toggleNotes());
+      btnCloseNotes.addEventListener("click", () => toggleNotes(false));
+      btnGrid.addEventListener("click", () => toggleGrid());
+      btnCloseGrid.addEventListener("click", () => toggleGrid(false));
+      btnFs.addEventListener("click", toggleFullscreen);
+
+      progressTrack.addEventListener("click", (e) => {
+        const rect = progressTrack.getBoundingClientRect();
+        const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        goTo(Math.min(total - 1, Math.floor(ratio * total)));
+      });
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          if (gridOpen) toggleGrid(false);
+          else if (notesOpen) toggleNotes(false);
+          return;
+        }
+        if (e.key === "g" || e.key === "G") {
+          e.preventDefault();
+          toggleGrid();
+          return;
+        }
+        if (e.key === "s" || e.key === "S") {
+          e.preventDefault();
+          toggleNotes();
+          return;
+        }
+        if (e.key === "f" || e.key === "F") {
+          e.preventDefault();
+          toggleFullscreen();
+          return;
+        }
+        if (gridOpen) return;
+        if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+          e.preventDefault();
+          goTo(current + 1);
+        } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+          e.preventDefault();
+          goTo(current - 1);
+        } else if (e.key === "Home") {
+          e.preventDefault();
+          goTo(0);
+        } else if (e.key === "End") {
+          e.preventDefault();
+          goTo(total - 1);
+        }
+      });
+
+      // Touch swipe support
+      let touchX = null;
+      window.addEventListener("touchstart", (e) => {
+        touchX = e.changedTouches[0].clientX;
+      }, { passive: true });
+      window.addEventListener("touchend", (e) => {
+        if (touchX === null || gridOpen) return;
+        const dx = e.changedTouches[0].clientX - touchX;
+        if (Math.abs(dx) > 48) {
+          goTo(dx < 0 ? current + 1 : current - 1);
+        }
+        touchX = null;
+      }, { passive: true });
+
+      window.addEventListener("resize", scaleStage);
+
+      // Init from URL hash if present
+      const m = location.hash.match(/^#slide-(\d+)$/);
+      if (m) {
+        const idx = parseInt(m[1], 10) - 1;
+        if (idx >= 0 && idx < total) current = idx;
+      }
+      scaleStage();
+      updateUI();
+    })();
+  </script>
+</body>
+</html>
